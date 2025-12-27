@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Saudagar Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background:#f8f9fa; }
+    .navbar { background:#0a2c3d; }
+    .navbar-brand, .nav-link { color:#fff !important; }
+    .search-box { width:450px; }
+    .category img { width:60px; }
+    .product-card img { height:180px; object-fit:contain; }
+    footer { background:#0a2c3d; color:#fff; }
+  </style>
+</head>
+<body>
+
+<!-- 🔷 NAVBAR -->
+<nav class="navbar navbar-expand-lg px-4">
+  <a class="navbar-brand fw-bold" href="#">SAUDAGAR</a>
+
+  <div class="mx-auto search-box">
+    <div class="input-group">
+      <input class="form-control" placeholder="Cari produk">
+      <button class="btn btn-warning">🔍</button>
+    </div>
+  </div>
+
+  <div class="text-white">
+    <span class="me-3">👤</span>
+    <span>🛒</span>
+  </div>
+</nav>
+
+<!-- 🔷 MENU -->
+<div class="bg-white shadow-sm">
+  <div class="container py-2">
+    <a href="#" class="me-3 text-decoration-none text-dark">Katalog</a>
+    <a href="#" class="me-3 text-decoration-none text-dark">Kategori</a>
+    <a href="#" class="text-decoration-none text-dark">Konfirmasi Pembayaran</a>
+  </div>
+</div>
+
+<!-- 🔷 BANNER -->
+<div class="container mt-4">
+  <div class="card border-0 shadow-sm">
+    <img src="https://dummyimage.com/1200x400/eeeeee/000000&text=Samsung+Smartphone+Promo" class="img-fluid rounded">
+  </div>
+</div>
+
+<!-- 🔷 KATEGORI -->
+<div class="container mt-5 text-center">
+  <h4>Kategori</h4>
+  <div class="row mt-3 justify-content-center">
+
+    <div class="col-4 col-md-2 category">
+      <img src="https://dummyimage.com/100x100/ddd/000&text=Mouse">
+      <p>Mouse</p>
+    </div>
+
+    <div class="col-4 col-md-2 category">
+      <img src="https://dummyimage.com/100x100/ddd/000&text=Laptop">
+      <p>Notebook</p>
+    </div>
+
+    <div class="col-4 col-md-2 category">
+      <img src="https://dummyimage.com/100x100/ddd/000&text=Band">
+      <p>Smart Band</p>
+    </div>
+
+    <div class="col-4 col-md-2 category">
+      <img src="https://dummyimage.com/100x100/ddd/000&text=Phone">
+      <p>Smartphone</p>
+    </div>
+
+    <div class="col-4 col-md-2 category">
+      <img src="https://dummyimage.com/100x100/ddd/000&text=Speaker">
+      <p>Speaker</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- 🔷 PRODUK UNGGULAN -->
+<div class="container mt-5">
+  <h4 class="text-center mb-4">Produk Unggulan</h4>
+
+  <div class="row g-4">
+
+    <!-- Product -->
+    <div class="col-md-3">
+      <div class="card product-card shadow-sm">
+        <img src="https://dummyimage.com/300x300/ffffff/000&text=Asus+Zenbook" class="card-img-top">
+        <div class="card-body text-center">
+          <h6>Asus ZenBook</h6>
+          <p class="text-muted">Rp13.000.000</p>
+          <button class="btn btn-outline-dark btn-sm">Tambah ke Keranjang</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card product-card shadow-sm">
+        <img src="https://dummyimage.com/300x300/ffffff/000&text=Mouse+Wireless">
+        <div class="card-body text-center">
+          <h6>Mouse Wireless GT90</h6>
+          <p class="text-muted">Rp480.000</p>
+          <button class="btn btn-outline-dark btn-sm">Tambah ke Keranjang</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card product-card shadow-sm">
+        <img src="https://dummyimage.com/300x300/ffffff/000&text=Mi+Band">
+        <div class="card-body text-center">
+          <h6>Mi Band</h6>
+          <p class="text-muted">Rp450.000</p>
+          <button class="btn btn-outline-dark btn-sm">Tambah ke Keranjang</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card product-card shadow-sm">
+        <img src="https://dummyimage.com/300x300/ffffff/000&text=Macbook+Air+M1">
+        <div class="card-body text-center">
+          <h6>Macbook Air M1</h6>
+          <p class="text-muted">Rp21.000.000</p>
+          <button class="btn btn-outline-dark btn-sm">Tambah ke Keranjang</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="text-center mt-4">
+    <button class="btn btn-outline-secondary">Tampilkan Lebih Banyak</button>
+  </div>
+</div>
+
+<!-- 🔷 FOOTER -->
+<footer class="mt-5 pt-4 pb-3">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-4">
+        <h6>Saudagar WP</h6>
+        <p class="small">Tema toko online modern untuk bisnis digital.</p>
+      </div>
+
+      <div class="col-md-4">
+        <h6>Link Penting</h6>
+        <ul class="list-unstyled small">
+          <li>Konfirmasi Pembayaran</li>
+          <li>Pembayaran & Pengiriman</li>
+          <li>Syarat & Ketentuan</li>
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <h6>Marketplace</h6>
+        <p>Tokopedia • Shopee • TikTok</p>
+      </div>
+
+    </div>
+
+    <hr class="border-secondary">
+    <p class="text-center small mb-0">
+      © 2025 Saudagar Gadget. All Rights Reserved
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
