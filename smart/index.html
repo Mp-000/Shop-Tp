@@ -1,134 +1,261 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Event Management – Landing Page Interaktif</title>
-  <link rel="stylesheet" href="styles.css" />
-  <meta name="description" content="Landing page interaktif untuk event: RSVP, countdown, galeri, peta, jadwal, dan share." />
+  <meta name="description" content="Landing page interaktif untuk event: RSVP, countdown, galeri, peta, jadwal, share, analytics, QR check-in." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #171a21;
+      --muted: #8a93a6;
+      --text: #f3f5f7;
+      --primary: #6ec1ff;
+      --accent: #90f5a8;
+      --danger: #ff6b6b;
+      --border: #2a2f3a;
+      --shadow: rgba(0,0,0,0.25);
+    }
+    [data-theme="light"] {
+      --bg: #f7f9fc;
+      --card: #ffffff;
+      --muted: #5b6578;
+      --text: #11131a;
+      --primary: #2b8cff;
+      --accent: #2ecc71;
+      --danger: #e74c3c;
+      --border: #e5e9f2;
+      --shadow: rgba(0,0,0,0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    a { color: var(--primary); text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    .btn { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: 0.2s ease; box-shadow: 0 4px 12px var(--shadow); }
+    .btn:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
+    .btn.primary {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #081019; border: none;
+      box-shadow: 0 0 14px rgba(110,193,255,0.35), 0 8px 20px var(--shadow);
+    }
+    .btn.primary:hover { filter: brightness(1.05); transform: translateY(-2px); }
+    .btn.danger { border-color: var(--danger); color: var(--danger); }
+
+    .hero {
+      position: relative; display: grid; place-items: center; padding: 80px 20px;
+      background: radial-gradient(1200px 600px at 30% 10%, rgba(110,193,255,0.18), transparent 60%),
+                  radial-gradient(800px 500px at 80% 0%, rgba(144,245,168,0.14), transparent 50%),
+                  linear-gradient(180deg, #11131a, var(--bg) 60%),
+                  url('https://images.unsplash.com/photo-1515165562835-c3b8b117f05e?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+    }
+    .hero::after { content: ""; position: absolute; inset: 0; background: rgba(15,17,21,0.5); }
+    .hero-content { position: relative; z-index: 1; text-align: center; max-width: 980px; }
+    .hero h1 { margin: 0 0 8px; font-family: Playfair Display, serif; font-size: 48px; letter-spacing: 0.4px; }
+    .hero p { margin: 0 0 24px; color: var(--muted); font-size: 16px; }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+
+    .countdown { display: flex; gap: 16px; justify-content: center; margin-top: 18px; }
+    .countdown .unit { background: var(--card); border: 1px solid var(--border); padding: 12px 16px; border-radius: 14px; min-width: 90px; perspective: 600px; }
+    .flip-num { font-size: 32px; display: block; text-align: center; transition: transform 0.6s ease; transform-origin: center bottom; }
+    .flip { transform: rotateX(180deg); }
+    .countdown small { color: var(--muted); display: block; text-align: center; margin-top: 6px; }
+
+    .toolbar { position: absolute; z-index: 2; display: flex; gap: 8px; top: 16px; right: 16px; }
+    .music { position: absolute; z-index: 1; right: 20px; bottom: 20px; }
+
+    main { padding: 36px 20px; max-width: 1200px; margin: 0 auto; }
+    .section { margin-bottom: 28px; }
+    .section h2 { margin: 0 0 16px; font-size: 28px; font-weight: 700; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 28px var(--shadow); padding: 16px; }
+
+    .timeline { list-style: none; padding: 0; margin: 0; border-left: 2px solid var(--border); }
+    .timeline li { padding: 10px 16px; border-bottom: 1px dashed var(--border); margin-left: 12px; display: grid; grid-template-columns: 90px 1fr; gap: 16px; align-items: baseline; }
+    .timeline strong { color: var(--accent); }
+
+    .grid { display: grid; gap: 16px; }
+    .grid.gallery { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .grid.gallery .imgwrap { border-radius: 14px; overflow: hidden; position: relative; border: 1px solid var(--border); cursor: zoom-in; }
+    .grid.gallery .imgwrap::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent, rgba(0,0,0,0.3)); opacity: 0; transition: opacity 0.2s ease; }
+    .grid.gallery .imgwrap:hover::after { opacity: 1; }
+    .grid.two { grid-template-columns: 1.3fr 0.7fr; }
+    @media (max-width: 900px) { .grid.two { grid-template-columns: 1fr; } }
+
+    .form { display: grid; gap: 12px; }
+    .form-row { display: grid; gap: 8px; }
+    .form-row input, .form-row select, .form-row textarea {
+      background: #111318; border: 1px solid var(--border); border-radius: 10px; color: var(--text); padding: 12px;
+    }
+    [data-theme="light"] .form-row input, [data-theme="light"] .form-row select, [data-theme="light"] .form-row textarea {
+      background: #f3f6fb;
+    }
+    .form-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .msg { margin-top: 8px; color: var(--accent); min-height: 18px; }
+
+    .list-actions { display: flex; gap: 10px; margin: 16px 0; flex-wrap: wrap; }
+
+    .table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .table th, .table td { padding: 10px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .table th { text-align: left; color: var(--muted); }
+    .table td .row-actions { display: flex; gap: 6px; }
+    .table tfoot td { color: var(--muted); }
+
+    .stats { list-style: none; padding: 0; margin: 0; }
+    .stats li { padding: 8px 10px; border-bottom: 1px dashed var(--border); display: flex; justify-content: space-between; }
+    .stats li:last-child { border-bottom: none; }
+
+    .map-wrap { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .map-wrap iframe { width: 100%; height: 320px; border: none; }
+
+    .footer { padding: 24px 20px; text-align: center; color: var(--muted); border-top: 1px solid var(--border); }
+
+    .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: grid; place-items: center; z-index: 999; }
+    .lightbox.hidden { display: none; }
+    .lightbox img { max-width: 90vw; max-height: 80vh; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 30px var(--shadow); }
+    .lightbox-close { position: absolute; top: 18px; right: 18px; background: transparent; border: none; font-size: 28px; color: var(--text); cursor: pointer; }
+
+    .fade-in { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    .toolbar .mode { padding: 8px 12px; }
+  </style>
 </head>
 <body>
-  <header class="hero">
+  <header class="hero" aria-label="Header event">
+    <div class="toolbar" role="toolbar" aria-label="Toolbar tampilan">
+      <button id="modeToggle" class="btn mode" aria-pressed="false">🌗 Mode: Dark</button>
+      <button id="addCalendar" class="btn">🗓️ Tambah ke Kalender</button>
+    </div>
     <div class="hero-content">
       <h1>Bandung Tech Gathering 2026</h1>
-      <p>Kolaborasi, produk, dan ide untuk UMKM & SaaS</p>
-      <div class="countdown" id="countdown">
-        <div><span id="dd">00</span><small>Hari</small></div>
-        <div><span id="hh">00</span><small>Jam</small></div>
-        <div><span id="mm">00</span><small>Menit</small></div>
-        <div><span id="ss">00</span><small>Detik</small></div>
+      <p>Kolaborasi, produk, dan ide untuk UMKM & SaaS — di jantung inovasi Jawa Barat.</p>
+      <div class="countdown" id="countdown" aria-live="polite" aria-label="Hitung mundur ke acara">
+        <div class="unit"><span id="dd" class="flip-num">00</span><small>Hari</small></div>
+        <div class="unit"><span id="hh" class="flip-num">00</span><small>Jam</small></div>
+        <div class="unit"><span id="mm" class="flip-num">00</span><small>Menit</small></div>
+        <div class="unit"><span id="ss" class="flip-num">00</span><small>Detik</small></div>
       </div>
       <div class="hero-actions">
         <button id="shareBtn" class="btn primary">Bagikan Event</button>
         <a href="#rsvp" class="btn">RSVP Sekarang</a>
       </div>
     </div>
-    <div class="music">
-      <button id="musicToggle" class="btn">🎵 Musik: Off</button>
+    <div class="music" aria-label="Pemutar musik">
+      <button id="musicToggle" class="btn" aria-pressed="false">🎵 Musik: Off</button>
       <audio id="bgAudio" src="https://cdn.pixabay.com/download/audio/2022/03/30/audio_6f74d6a51d.mp3?filename=ambient-background-110684.mp3" loop></audio>
     </div>
   </header>
 
   <main>
-    <section class="section" id="schedule">
-      <h2>Jadwal Acara</h2>
-      <ul class="timeline">
-        <li><strong>09:00</strong> Registrasi & Networking</li>
-        <li><strong>10:00</strong> Keynote: Smart Enterprise untuk UMKM</li>
-        <li><strong>11:30</strong> Panel: Hybrid POS & Integrasi Marketplace</li>
-        <li><strong>13:00</strong> Lunch & Demo Booth</li>
-        <li><strong>15:00</strong> Workshop: Landing Page Interaktif</li>
-      </ul>
+    <section class="section fade-in" id="schedule" aria-labelledby="schedule-title">
+      <h2 id="schedule-title">Jadwal acara</h2>
+      <div class="card">
+        <ul class="timeline">
+          <li><strong>09:00</strong> Registrasi & Networking</li>
+          <li><strong>10:00</strong> Keynote: Smart Enterprise untuk UMKM</li>
+          <li><strong>11:30</strong> Panel: Hybrid POS & Integrasi Marketplace</li>
+          <li><strong>13:00</strong> Lunch & Demo Booth</li>
+          <li><strong>15:00</strong> Workshop: Landing Page Interaktif</li>
+        </ul>
+      </div>
     </section>
 
-    <section class="section" id="gallery">
-      <h2>Galeri</h2>
+    <section class="section fade-in" id="gallery" aria-labelledby="gallery-title">
+      <h2 id="gallery-title">Galeri</h2>
       <div class="grid gallery">
-        <img src="https://images.unsplash.com/photo-1551836022-8b63f7b0e3c7?q=80&w=800&auto=format&fit=crop" alt="Stage" data-large="https://images.unsplash.com/photo-1551836022-8b63f7b0e3c7?q=80&w=1600&auto=format&fit=crop" />
-        <img src="https://images.unsplash.com/photo-1509395176047-4a66953fd231?q=80&w=800&auto=format&fit=crop" alt="Audience" data-large="https://images.unsplash.com/photo-1509395176047-4a66953fd231?q=80&w=1600&auto=format&fit=crop" />
-        <img src="https://images.unsplash.com/photo-1522199710521-72d69614c702?q=80&w=800&auto=format&fit=crop" alt="Workshop" data-large="https://images.unsplash.com/photo-1522199710521-72d69614c702?q=80&w=1600&auto=format&fit=crop" />
+        <div class="imgwrap"><img src="https://images.unsplash.com/photo-1551836022-8b63f7b0e3c7?q=80&w=800&auto=format&fit=crop" alt="Panggung utama"></div>
+        <div class="imgwrap"><img src="https://images.unsplash.com/photo-1509395176047-4a66953fd231?q=80&w=800&auto=format&fit=crop" alt="Suasana audiens"></div>
+        <div class="imgwrap"><img src="https://images.unsplash.com/photo-1522199710521-72d69614c702?q=80&w=800&auto=format&fit=crop" alt="Sesi workshop"></div>
+        <div class="imgwrap"><img src="https://images.unsplash.com/photo-1531058020387-3be344f1e6b2?q=80&w=800&auto=format&fit=crop" alt="Area networking"></div>
       </div>
     </section>
 
-    <section class="section" id="rsvp">
-      <h2>RSVP</h2>
-      <form id="rsvpForm" class="form">
-        <div class="form-row">
-          <label for="name">Nama</label>
-          <input type="text" id="name" name="name" placeholder="Nama lengkap" required />
-        </div>
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="nama@email.com" required />
-        </div>
-        <div class="form-row">
-          <label for="attendees">Jumlah Tamu</label>
-          <input type="number" id="attendees" name="attendees" min="1" max="10" value="1" required />
-        </div>
-        <div class="form-row">
-          <label for="status">Status Kehadiran</label>
-          <select id="status" name="status" required>
-            <option value="hadir">Hadir</option>
-            <option value="tidak_hadir">Tidak Hadir</option>
-            <option value="pending">Pending</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label for="notes">Catatan</label>
-          <textarea id="notes" name="notes" rows="3" placeholder="Preferensi, kebutuhan khusus, dll."></textarea>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn primary">Kirim RSVP</button>
-          <button type="reset" class="btn">Reset</button>
-        </div>
-        <p id="rsvpMsg" class="msg"></p>
-      </form>
+    <section class="section fade-in" id="rsvp" aria-labelledby="rsvp-title">
+      <h2 id="rsvp-title">RSVP</h2>
+      <div class="card">
+        <form id="rsvpForm" class="form" aria-describedby="rsvpMsg">
+          <div class="form-row">
+            <label for="name">Nama</label>
+            <input type="text" id="name" name="name" placeholder="Nama lengkap" required aria-required="true" />
+          </div>
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="nama@email.com" required aria-required="true" />
+            <small id="emailHint" class="muted" aria-live="polite"></small>
+          </div>
+          <div class="form-row">
+            <label for="attendees">Jumlah tamu</label>
+            <input type="number" id="attendees" name="attendees" min="1" max="10" value="1" required />
+          </div>
+          <div class="form-row">
+            <label for="status">Status kehadiran</label>
+            <select id="status" name="status" required>
+              <option value="hadir">Hadir</option>
+              <option value="tidak_hadir">Tidak Hadir</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="notes">Catatan</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Preferensi, kebutuhan khusus, dll."></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn primary">Kirim RSVP</button>
+            <button type="reset" class="btn">Reset</button>
+            <button type="button" id="exportCsv" class="btn">Export CSV</button>
+            <button type="button" id="exportPdf" class="btn">Export PDF</button>
+            <button type="button" id="clearList" class="btn danger">Hapus Semua</button>
+          </div>
+          <p id="rsvpMsg" class="msg" role="status"></p>
+        </form>
 
-      <div class="list-actions">
-        <button id="exportCsv" class="btn">Export CSV</button>
-        <button id="clearList" class="btn danger">Hapus Semua</button>
-      </div>
-
-      <div class="grid two">
-        <div>
-          <h3>Daftar Tamu</h3>
-          <table class="table" id="guestTable">
-            <thead>
-              <tr>
-                <th>Nama</th><th>Email</th><th>Tamu</th><th>Status</th><th>Catatan</th><th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div>
-          <h3>Analytics</h3>
-          <ul class="stats" id="stats">
-            <li><strong>Total RSVP:</strong> <span id="statTotal">0</span></li>
-            <li><strong>Hadir:</strong> <span id="statHadir">0</span></li>
-            <li><strong>Tidak Hadir:</strong> <span id="statTidak">0</span></li>
-            <li><strong>Pending:</strong> <span id="statPending">0</span></li>
-            <li><strong>Total Tamu:</strong> <span id="statGuests">0</span></li>
-          </ul>
-          <div class="share-alt">
-            <button id="waShare" class="btn">Share WhatsApp</button>
-            <button id="tgShare" class="btn">Share Telegram</button>
+        <div class="grid two" style="margin-top:16px;">
+          <div>
+            <h3>Daftar tamu</h3>
+            <table class="table" id="guestTable" aria-label="Daftar tamu">
+              <thead>
+                <tr>
+                  <th>Nama</th><th>Email</th><th>Tamu</th><th>Status</th><th>Catatan</th><th>QR</th><th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot>
+                <tr><td colspan="7">Gunakan tombol aksi untuk edit atau hapus RSVP.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+          <div>
+            <h3>Analytics</h3>
+            <ul class="stats" id="stats">
+              <li><strong>Total RSVP:</strong><span id="statTotal">0</span></li>
+              <li><strong>Hadir:</strong><span id="statHadir">0</span></li>
+              <li><strong>Tidak Hadir:</strong><span id="statTidak">0</span></li>
+              <li><strong>Pending:</strong><span id="statPending">0</span></li>
+              <li><strong>Total Tamu:</strong><span id="statGuests">0</span></li>
+            </ul>
+            <canvas id="chartStatus" aria-label="Diagram status kehadiran" style="margin-top:12px;"></canvas>
+            <canvas id="chartTimeline" aria-label="Timeline registrasi" style="margin-top:12px;"></canvas>
+            <div class="share-alt" style="margin-top:12px;">
+              <button id="waShare" class="btn">Share WhatsApp</button>
+              <button id="tgShare" class="btn">Share Telegram</button>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="location">
-      <h2>Lokasi</h2>
+    <section class="section fade-in" id="location" aria-labelledby="loc-title">
+      <h2 id="loc-title">Lokasi</h2>
       <div class="map-wrap">
-        <iframe
-          title="Lokasi Event"
-          src="https://www.google.com/maps?q=Bandung&output=embed"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+        <iframe title="Lokasi Event" src="https://www.google.com/maps?q=Bandung&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-      <p class="note">Alamat: Jl. Asia Afrika, Bandung, Jawa Barat</p>
+      <p class="muted">Alamat: Jl. Asia Afrika, Bandung, Jawa Barat</p>
     </section>
   </main>
 
@@ -136,16 +263,136 @@
     <p>© 2026 Bandung Tech Gathering — Dibangun dengan HTML, CSS, dan JavaScript</p>
   </footer>
 
-  <!-- Lightbox modal -->
-  <div id="lightbox" class="lightbox hidden">
-    <button id="lightboxClose" class="lightbox-close">✕</button>
-    <img id="lightboxImg" alt="Preview" />
+  <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="Lightbox gambar">
+    <button id="lightboxClose" class="lightbox-close" aria-label="Tutup gambar">✕</button>
+    <img id="lightboxImg" alt="Preview gambar" />
   </div>
 
   <script>
-    // Tanggal acara (YYYY-MM-DDTHH:MM:SS lokal)
-    window.EVENT_DATE = "2026-02-15T09:00:00";
-  </script>
-  <script src="app.js"></script>
-</body>
-          </html>
+    // Konfigurasi event
+    const EVENT = {
+      title: "Bandung Tech Gathering 2026",
+      description: "Kolaborasi, produk, dan ide untuk UMKM & SaaS.",
+      location: "Jl. Asia Afrika, Bandung, Jawa Barat",
+      startISO: "2026-02-15T09:00:00+07:00",
+      endISO:   "2026-02-15T17:00:00+07:00",
+      url: location.href
+    };
+
+    // Util
+    const $ = (sel, scope = document) => scope.querySelector(sel);
+    const $$ = (sel, scope = document) => Array.from(scope.querySelectorAll(sel));
+    const pad = (n) => String(n).padStart(2, "0");
+    const STORAGE_KEY = "event_rsvp_list_v2";
+
+    // Theme toggle
+    (function initTheme() {
+      const btn = $("#modeToggle");
+      const root = document.documentElement;
+      function setTheme(next) {
+        root.setAttribute("data-theme", next);
+        btn.textContent = next === "dark" ? "🌗 Mode: Dark" : "🌗 Mode: Light";
+        btn.setAttribute("aria-pressed", next === "dark" ? "false" : "true");
+        localStorage.setItem("theme", next);
+      }
+      const saved = localStorage.getItem("theme") || "dark";
+      setTheme(saved);
+      btn.addEventListener("click", () => {
+        const now = root.getAttribute("data-theme");
+        setTheme(now === "dark" ? "light" : "dark");
+      });
+    })();
+
+    // Fade-in on scroll
+    (function initReveal() {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
+      }, { threshold: 0.1 });
+      $$(".fade-in").forEach(el => obs.observe(el));
+    })();
+
+    // Countdown with flip animation
+    (function initCountdown() {
+      const target = new Date(EVENT.startISO);
+      const dd = $("#dd"), hh = $("#hh"), mm = $("#mm"), ss = $("#ss");
+      function flip(el, val) {
+        if (el.textContent !== val) {
+          el.classList.add("flip");
+          setTimeout(() => { el.textContent = val; el.classList.remove("flip"); }, 300);
+        }
+      }
+      function tick() {
+        const now = new Date();
+        const diff = Math.max(0, target - now);
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+        flip(dd, pad(d)); flip(hh, pad(h)); flip(mm, pad(m)); flip(ss, pad(s));
+      }
+      tick(); setInterval(tick, 1000);
+    })();
+
+    // Music toggle
+    (function initMusic() {
+      const btn = $("#musicToggle");
+      const audio = $("#bgAudio");
+      let playing = false;
+      btn.addEventListener("click", async () => {
+        try {
+          if (!playing) { await audio.play(); playing = true; btn.textContent = "🎵 Musik: On"; btn.setAttribute("aria-pressed", "true"); }
+          else { audio.pause(); playing = false; btn.textContent = "🎵 Musik: Off"; btn.setAttribute("aria-pressed", "false"); }
+        } catch (e) {
+          alert("Autoplay diblokir, silakan klik lagi untuk memutar.");
+        }
+      });
+    })();
+
+    // Lightbox
+    (function initGallery() {
+      const lb = $("#lightbox"), lbImg = $("#lightboxImg"), lbClose = $("#lightboxClose");
+      $$(".gallery .imgwrap img").forEach(img => {
+        img.addEventListener("click", () => {
+          lbImg.src = img.src.replace("w=800", "w=1600");
+          lb.classList.remove("hidden");
+        });
+      });
+      lbClose.addEventListener("click", () => lb.classList.add("hidden"));
+      lb.addEventListener("click", (e) => { if (e.target === lb) lb.classList.add("hidden"); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") lb.classList.add("hidden"); });
+    })();
+
+    // RSVP storage
+    const loadList = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    const saveList = (list) => localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+
+    // Email duplicate hint (real-time)
+    (function initEmailHint() {
+      const email = $("#email");
+      const hint = $("#emailHint");
+      email.addEventListener("input", () => {
+        const val = email.value.trim();
+        if (!val) { hint.textContent = ""; return; }
+        const exists = loadList().some(x => x.email.toLowerCase() === val.toLowerCase());
+        hint.textContent = exists ? "Email sudah terdaftar, kirim untuk memperbarui data." : "";
+      });
+    })();
+
+    // Calendar integration (Google Calendar link)
+    (function initCalendar() {
+      const btn = $("#addCalendar");
+      btn.addEventListener("click", () => {
+        const start = EVENT.startISO.replace(/[-:]/g, "").replace(/\.\d+Z$/, "");
+        const end = EVENT.endISO.replace(/[-:]/g, "").replace(/\.\d+Z$/, "");
+        const href = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(EVENT.title)}&details=${encodeURIComponent(EVENT.description)}&location=${encodeURIComponent(EVENT.location)}&dates=${start}/${end}`;
+        window.open(href, "_blank");
+      });
+    })();
+
+    // Render table & stats + charts
+    let chartStatus, chartTimeline;
+    function render() {
+      const tbody = $("#guestTable tbody");
+      const list = loadList();
+      tbody.innerHTML = "";
+      li
