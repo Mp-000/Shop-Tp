@@ -1,0 +1,73 @@
+:root {
+  --bg: #0f1115;
+  --card: #171a21;
+  --muted: #8a93a6;
+  --text: #f3f5f7;
+  --primary: #5ac8fa;
+  --accent: #8ef58a;
+  --danger: #ff6b6b;
+  --border: #2a2f3a;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+a { color: var(--primary); text-decoration: none; }
+.btn { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 8px; cursor: pointer; transition: 0.2s ease; }
+.btn:hover { border-color: var(--primary); color: var(--primary); }
+.btn.primary { background: var(--primary); color: #081019; border-color: var(--primary); }
+.btn.primary:hover { filter: brightness(1.05); }
+.btn.danger { border-color: var(--danger); color: var(--danger); }
+
+.hero { position: relative; display: grid; place-items: center; padding: 64px 20px; background: linear-gradient(180deg, #11131a, #0f1115 60%), url('https://images.unsplash.com/photo-1515165562835-c3b8b117f05e?q=80&w=1600&auto=format&fit=crop') center/cover; }
+.hero::after { content: ""; position: absolute; inset: 0; background: rgba(15, 17, 21, 0.55); }
+.hero-content { position: relative; z-index: 1; text-align: center; max-width: 900px; }
+.hero h1 { margin: 0 0 8px; font-size: 42px; letter-spacing: 0.5px; }
+.hero p { margin: 0 0 24px; color: var(--muted); }
+.hero-actions { display: flex; gap: 12px; justify-content: center; margin-top: 16px; }
+
+.countdown { display: flex; gap: 16px; justify-content: center; margin-top: 8px; }
+.countdown div { background: var(--card); border: 1px solid var(--border); padding: 12px 14px; border-radius: 10px; min-width: 80px; }
+.countdown span { font-size: 28px; display: block; text-align: center; }
+.countdown small { color: var(--muted); display: block; text-align: center; }
+
+.music { position: absolute; z-index: 1; right: 20px; bottom: 20px; }
+.section { padding: 36px 20px; max-width: 1100px; margin: 0 auto; }
+.section h2 { margin: 0 0 16px; font-size: 28px; }
+
+.timeline { list-style: none; padding: 0; margin: 0; border-left: 2px solid var(--border); }
+.timeline li { padding: 8px 16px; border-bottom: 1px dashed var(--border); margin-left: 12px; }
+.timeline strong { color: var(--accent); }
+
+.grid { display: grid; gap: 16px; }
+.grid.gallery { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.grid.gallery img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); cursor: zoom-in; }
+.grid.two { grid-template-columns: 1.2fr 0.8fr; }
+@media (max-width: 860px) { .grid.two { grid-template-columns: 1fr; } }
+
+.form { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.form-row { display: grid; gap: 8px; margin-bottom: 12px; }
+.form-row input, .form-row select, .form-row textarea { background: #111318; border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px; }
+.form-actions { display: flex; gap: 10px; }
+.msg { margin-top: 10px; color: var(--accent); }
+
+.list-actions { display: flex; gap: 10px; margin: 16px 0; }
+
+.table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.table th, .table td { padding: 10px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.table th { text-align: left; color: var(--muted); }
+.table td .row-actions { display: flex; gap: 6px; }
+
+.stats { list-style: none; padding: 0; margin: 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px; }
+.stats li { padding: 10px 12px; border-bottom: 1px dashed var(--border); }
+.stats li:last-child { border-bottom: none; }
+
+.map-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.map-wrap iframe { width: 100%; height: 320px; border: none; }
+
+.footer { padding: 24px 20px; text-align: center; color: var(--muted); border-top: 1px solid var(--border); }
+
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: grid; place-items: center; }
+.lightbox.hidden { display: none; }
+.lightbox img { max-width: 90vw; max-height: 80vh; border-radius: 12px; border: 1px solid var(--border); }
+.lightbox-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 24px; color: var(--text); cursor: pointer; }
